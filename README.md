@@ -1,6 +1,6 @@
 # Supa Mod Checker (Formerly Moon Mod Checker)
 
-![Superman Banner](superman.png)
+![Superman Banner](supa.png)
 
 A BepInEx plugin for Gorilla Tag that shows which players in your current room have mods installed, and lists the mod names.
 - We play GTAG so we felt we should improve this tool to work, and discover mods in use during gameplay for our safety and integrity in modded servers. 
