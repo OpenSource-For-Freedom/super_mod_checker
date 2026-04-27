@@ -1,6 +1,9 @@
-# Moon Mod Checker
+# Supa Mod Checker (Formerly Moon Mod Checker)
+
+![Superman Banner](superman.png)
 
 A BepInEx plugin for Gorilla Tag that shows which players in your current room have mods installed, and lists the mod names.
+- We play GTAG so we felt we should improve this tool to work, and discover mods in use during gameplay for our safety and integrity in modded servers. 
 
 ## Installation
 
@@ -18,7 +21,7 @@ The plugin is a standard BepInEx `BaseUnityPlugin` that hooks Unity's `OnGUI` lo
 - A toggle button labeled **Moon Mod Checker** shows/hides the window.
 - When the window is open and you are **not in a Photon room**, it displays `"Not connected to a room."`.
 - When you **are in a room**, it iterates over `PhotonNetwork.PlayerList` and reads each player's `CustomProperties["mods"]` key.
-- If that property is non-empty (i.e. the player's mod reports itself via Photon custom properties), the window prints: `PlayerName IS USING MODS: <mod list>`.
+- It aggregates a room-wide list of reported mods and displays only mod names with counts (no usernames).
 
 Mods that self-report to Photon custom properties under the key `"mods"` will be visible here.
 
@@ -37,9 +40,23 @@ The original `MoonModChecker.dll` (credited to Moon, redistributed by cgtsaturn)
 5. **Updated the build target** from BepInEx 5.4.21.0 to **BepInEx 5.4.23.5** (latest stable as of 2026), referencing the BepInEx core DLL and the game's Photon/UnityEngine DLLs directly via HintPaths.
 6. **Built** with `dotnet build -c Release` — 0 warnings, 0 errors.
 
+This rebuild was done to address older BepInEx compatibility problems and to remove risky/obfuscated implementation details that made security review difficult.
+
+## Security scan summary
+
+Latest rebuilt binary reviewed: `supamodcheck.dll`
+
+- SHA256: `73824A6C595C772A9AADC3CB0436267F07B5FB72AB9D66D01428A3DBC5E5DB0E`
+- Authenticode signature: **Not signed**
+- Referenced assemblies: expected Unity/Photon/BepInEx dependencies
+- Static source scan: no `Process.Start`, no shell execution, no web download/exfiltration APIs, no P/Invoke, no registry writes
+- Strings scan: no hardcoded URLs, IPs, webhooks, tokens, or passwords related to credential leakage
+
+Overall risk assessment of this rebuilt DLL: **Low** (GUI utility behavior only; no malicious patterns detected in static review).
+
 ## Credits
 
-Original mod by **Moon**. Reverse engineered and rebuilt by cgtsaturn.
+Original mod by **Moon**. Reverse engineered and rebuilt by `opensource-for-freedom`.
 
 ## Disclaimer
 
