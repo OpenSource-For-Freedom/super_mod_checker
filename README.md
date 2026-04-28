@@ -1,4 +1,4 @@
-# Supa Mod Checker
+# Super Mod Checker
 
 Supa Mod Checker is a BepInEx plugin for Gorilla Tag that shows room-level mod information inside a handheld in-game tablet.
 
