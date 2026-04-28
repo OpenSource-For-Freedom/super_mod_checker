@@ -13,7 +13,7 @@ Super Mod Checker is a BepInEx plugin for Gorilla Tag that shows room-level mod 
 
 It reads each player's Photon custom property `mods`, aggregates the values, and shows counts by mod name.
 
-## Eye Glass — Ocular HUD
+## Eye Glass + Ocular HUD
 
 Super Mod Checker includes a built-in **Eye Glass** — a transparent glass overlay that functions as an ocular piece directly inside your Oculus headset. It floats in your field of view at all times and immediately flags modded players the moment they are detected, without needing to open the tablet. Designed for Oculus / Steam VR, the Eye Glass renders in world-space so it appears inside the headset and not just on your desktop mirror.
 
