@@ -1,65 +1,100 @@
-# Supa Mod Checker (Formerly Moon Mod Checker)
+# Supa Mod Checker
 
-<div align="center">
-  <img src="supa.png" alt="Superman Banner" width="400">
-</div>
+Supa Mod Checker is a BepInEx plugin for Gorilla Tag that shows room-level mod information inside a handheld in-game tablet.
 
-A BepInEx plugin for Gorilla Tag that shows which players in your current room have mods installed, and lists the mod names.
-- We play GTAG so we felt we should improve this tool to work, and discover mods in use during gameplay for our safety and integrity in modded servers. 
+It reads each player's Photon custom property `mods`, aggregates the values, and shows counts by mod name.
 
-## Installation
+## What It Does
 
-1. Install **BepInEx 5.4.23.5** into your Gorilla Tag folder:
-	- Steam: `C:\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\`
-	- Oculus: `C:\Program Files\Oculus\Software\Software\another-axiom-gorilla-tag\`
-	- Extract the BepInEx zip into that folder so you have a `BepInEx\` directory alongside `Gorilla Tag.exe`.
-2. Copy `supamodcheck.dll` into `BepInEx\plugins\`.
-3. Launch the game. The mod checker toggle appears in the top-left corner of the screen.
+- Shows a world-space tablet UI in your right hand.
+- Lists reported mods in your current room.
+- Includes tabs for:
+  - Mod Check
+  - Stability
+  - In Game Errors
+- Supports refresh and close actions on the tablet.
+- Writes runtime telemetry and events to a JSONL log file for diagnostics.
 
-## How it works
+## Requirements
 
-The plugin is a standard BepInEx `BaseUnityPlugin` that hooks Unity's `OnGUI` loop. It renders a draggable IMGUI window with the following logic:
+- Gorilla Tag (Steam or Oculus install)
+- BepInEx 5.4.23.5
 
-- A toggle button labeled **Moon Mod Checker** shows/hides the window.
-- When the window is open and you are **not in a Photon room**, it displays `"Not connected to a room."`.
-- When you **are in a room**, it iterates over `PhotonNetwork.PlayerList` and reads each player's `CustomProperties["mods"]` key.
-- It aggregates a room-wide list of reported mods and displays only mod names with counts (no usernames).
+## Simple Install (Users)
 
-Mods that self-report to Photon custom properties under the key `"mods"` will be visible here.
+1. Install BepInEx 5.4.23.5 into your Gorilla Tag folder.
+2. Copy `supamodcheck.dll` into `BepInEx/plugins/`.
+3. Launch Gorilla Tag.
+4. Press the right controller A button to toggle the tablet.
 
-## Reverse engineering notes
+Typical Gorilla Tag paths:
 
-The original `MoonModChecker.dll` (credited to Moon, redistributed by cgtsaturn) had **no source published**. We recovered it as follows:
+- Steam: `C:/Program Files (x86)/Steam/steamapps/common/Gorilla Tag/`
+- Oculus: `C:/Program Files/Oculus/Software/Software/another-axiom-gorilla-tag/`
 
-1. **Decompiled** the managed .NET DLL using `ilspycmd 8.2.0` (`ilspycmd MoonModChecker.dll -p -o src/`).
-2. **Identified obfuscation**: the decompiled output used Ether_Obfuscator — all identifiers were renamed to long garbage strings, and every string constant was replaced with an XXTEA-encrypted blob decoded at runtime.
-3. **Decrypted strings**: wrote a standalone .NET 8 console program to run the same XXTEA decryption routine from the decompiled code. Recovered all four string constants:
-	- `"+CqihIy6Debo8zPF9sJM8NztswI="` -> `"Moon Mod Checker"` (window title / toggle label)
-	- `"Jy2RAlC3ioH7w2rPkDmuhgM2cyQfhG6BYKpeYw=="` -> `"Not connected to a room."`
-	- `"6/zMN4IxWF0="` -> `"mods"` (Photon CustomProperties key)
-	- `"XoRznsVjqgiK6J4powu7DsOZCwM="` -> `" IS USING MODS: "` (display separator)
-4. **Rewrote** the plugin as clean, readable C# (`src/ModMenuPatch.cs`) with named constants replacing all encrypted strings and meaningful variable/method names replacing the obfuscated ones.
-5. **Updated the build target** from BepInEx 5.4.21.0 to **BepInEx 5.4.23.5** (latest stable as of 2026), referencing the BepInEx core DLL and the game's Photon/UnityEngine DLLs directly via HintPaths.
-6. **Built** with `dotnet build -c Release` — 0 warnings, 0 errors.
+## Controls
 
-This rebuild was done to address older BepInEx compatibility problems and to remove risky/obfuscated implementation details that made security review difficult.
+- A button: Show/Hide tablet
+- B button: Cycle tab (when tablet is visible)
+- Physical tablet buttons:
+  - REFRESH: reload current tab data
+  - CLOSE: hide tablet
 
-## Security scan summary
+## Log File Behavior
 
-Latest rebuilt binary reviewed: `supamodcheck.dll`
+The plugin creates and appends this file automatically:
 
-- SHA256: `73824A6C595C772A9AADC3CB0436267F07B5FB72AB9D66D01428A3DBC5E5DB0E`
-- Authenticode signature: **Not signed**
-- Referenced assemblies: expected Unity/Photon/BepInEx dependencies
-- Static source scan: no `Process.Start`, no shell execution, no web download/exfiltration APIs, no P/Invoke, no registry writes
-- Strings scan: no hardcoded URLs, IPs, webhooks, tokens, or passwords related to credential leakage
+- `BepInEx/supamodcheck-log.jsonl`
 
-Overall risk assessment of this rebuilt DLL: **Low** (GUI utility behavior only; no malicious patterns detected in static review).
+You do not need to create the file manually.
+
+Events written include:
+
+- `game_start`, `game_stop`
+- `telemetry` (heartbeat)
+- `room_join`, `room_leave`
+- `mods_snapshot`
+- `input_a_press`, `input_b_press`
+- `menu_shown`, `menu_hidden`
+- `manual_refresh`
+
+## Important Notes
+
+- This tool only shows mods that are actually reported in Photon custom properties under key `mods`.
+- If a mod does not publish its value there, it cannot be listed.
+- Room data is aggregated by mod name and count, not by player identity.
+
+## Troubleshooting
+
+If tablet does not appear:
+
+1. Confirm `supamodcheck.dll` is in `BepInEx/plugins/`.
+2. Check `BepInEx/LogOutput.log` for plugin load errors.
+3. Confirm you are using BepInEx 5.4.23.5.
+4. Press A after entering game world (not only in menus).
+
+If mod list is empty in-room:
+
+1. Verify you are connected to a Photon room.
+2. Verify other clients actually publish `mods` to Photon custom properties.
+
+## Build (Developers)
+
+From the source project folder:
+
+```powershell
+dotnet build -c Release
+```
+
+Output DLL:
+
+- `src/bin/Release/net472/supamodcheck.dll`
 
 ## Credits
 
-Original mod by **Moon**. Reverse engineered and rebuilt by `opensource-for-freedom`.
+- Original concept credit: Moon
+- Current maintained/rebuilt plugin: this repository
 
 ## Disclaimer
 
-This product is not affiliated with Gorilla Tag or Another Axiom LLC and is not endorsed or otherwise sponsored by Another Axiom LLC. Portions of the materials contained herein are property of Another Axiom LLC. © 2021 Another Axiom LLC.
+This project is not affiliated with, endorsed by, or sponsored by Another Axiom LLC.
