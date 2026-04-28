@@ -4,6 +4,11 @@
   <img src="supa.png" alt="Supa Mod Checker Banner" width="400">
 </div>
 
+<div align="center">
+  <img src="ingame.png" alt="In-Game UI" width="720">
+  <br><em>In-game glass HUD overlay and tablet menu</em>
+</div>
+
 Super Mod Checker is a BepInEx plugin for Gorilla Tag that shows room-level mod information inside a handheld in-game tablet.
 
 It reads each player's Photon custom property `mods`, aggregates the values, and shows counts by mod name.
