@@ -75,7 +75,7 @@ Events written include:
 ## Important Notes
 
 - This tool only shows mods that are actually reported in Photon custom properties under key `mods`.
-- If a mod does not publish its value there, it cannot be listed.
+- If a mod does not publish its value there, it cannot be listed to which I could use mroe help here, adding more mod names to the 3 arrays in the core mod file. 
 - Room data is aggregated by mod name and count, not by player identity.
 
 ## Troubleshooting
