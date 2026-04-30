@@ -4,5 +4,14 @@
 # Except these
 !.gitignore
 !README.md
+!LICENSE
 !supamodcheck.dll
 !supa.png
+!ingame.png
+
+# Community standards
+!CONTRIBUTING.md
+!CODE_OF_CONDUCT.md
+!SECURITY.md
+!.github/
+!.github/**
