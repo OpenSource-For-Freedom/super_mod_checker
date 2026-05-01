@@ -5,6 +5,10 @@
 </div>
 
 <div align="center">
+  <img alt="Views" src="https://komarev.com/ghpvc/?username=OpenSource-For-Freedom&repo=super_mod_checker&label=repo%20views&color=00ff41&style=flat">
+</div>
+
+<div align="center">
   <img src="ingame.png" alt="In-Game UI" width="720">
   <br><em>In-game glass HUD overlay and tablet menu</em>
 </div>
