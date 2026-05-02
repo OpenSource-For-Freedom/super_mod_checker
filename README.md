@@ -1,5 +1,7 @@
 # Super Mod Checker
-
+<p align="center">
+	<a href="https://hits.sh/github.com/opensource_for_freedom/super_mod_checker/"/></a>
+</p>
 <div align="center">
   <img src="supa.png" alt="Supa Mod Checker Banner" width="400">
 </div>
@@ -12,6 +14,7 @@
   <img src="ingame.png" alt="In-Game UI" width="720">
   <br><em>In-game glass HUD overlay and tablet menu</em>
 </div>
+
 
 Super Mod Checker is a BepInEx plugin for Gorilla Tag that shows room-level mod information inside a handheld in-game tablet.
 
