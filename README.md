@@ -96,18 +96,6 @@ If mod list is empty in-room:
 1. Verify you are connected to a Photon room.
 2. Verify other clients actually publish `mods` to Photon custom properties.
 
-## Build (Developers)
-
-From the source project folder:
-
-```powershell
-dotnet build -c Release
-```
-
-Output DLL:
-
-- `src/bin/Release/net472/supamodcheck.dll`
-
 ## Credits
 
 - Original concept credit: Moon
